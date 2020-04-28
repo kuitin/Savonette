@@ -56,6 +56,15 @@
     background-image: url('img/cards.jpg'); /* temp hack to see it */
 }
 
+.decktablecard {
+    display: inline-block;
+    position: relative;
+    margin-top: 5px;
+    width: 72px;
+    height: 96px;
+    background-image: url('img/cards.jpg'); /* temp hack to see it */
+}
+
 
 /** Table layout **/
 
@@ -98,6 +107,51 @@
 }
 
 .playertablecard {
+    display: inline-block;
+    position: relative;
+    margin-top: 5px;
+    width: 72px;
+    height: 96px;
+    /* we remove background-image here */
+}
+
+
+
+#decktables {
+    position: relative;
+    width: 710px;
+    height: 340px;
+}
+
+.decktable {
+    position: absolute;
+    text-align: center;
+    width: 180px;
+    height: 130px;
+}
+
+.decktables_N {
+    left: 50%;
+    top: 0px;
+    margin-left: -90px; /* half of 180 */
+}
+.decktables_S {
+    left: 50%;
+    bottom: 0px;
+    margin-left: -90px; /* half of 180 */
+}
+.decktables_W {
+    left: 0px;
+    top: 50%;
+    margin-top: -55px; /* half of 130 */
+}
+.decktables_E {
+    right: 0px;
+    top: 50%;
+    margin-top: -55px; /* half of 130 */
+}
+
+.decktablecard {
     display: inline-block;
     position: relative;
     margin-top: 5px;
