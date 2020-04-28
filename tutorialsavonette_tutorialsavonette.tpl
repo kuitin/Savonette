@@ -31,7 +31,7 @@
 
     <!-- BEGIN player -->
     <div class="playertable whiteblock playertable_{DIR}">
-    <div class="decktablecard" id="decktablecard_{PLAYER_ID}">
+        <div class="decktablecard" id="decktablecard_{PLAYER_ID}">
         </div>
         <div class="playertablecard" id="playertablecard_{PLAYER_ID}">
         </div>
