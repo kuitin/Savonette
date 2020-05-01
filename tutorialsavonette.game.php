@@ -182,6 +182,10 @@ class TutorialSavonette extends Table
         $currentTrickColor = self::getGameStateValue( 'trickColor' ) ;
        if( $currentTrickColor == 0 )
            self::setGameStateValue( 'trickColor', $currentCard['type'] );
+
+        // Pick card according to the action of the card
+        self::playActionOfPlayedCard($player_id);
+
         // And notify
         self::notifyAllPlayers('playCard', clienttranslate('${player_name} plays ${value_displayed} ${color_displayed}'), array (
                 'i18n' => array ('color_displayed','value_displayed' ),'card_id' => $card_id,'player_id' => $player_id,
@@ -190,6 +194,28 @@ class TutorialSavonette extends Table
                 'color_displayed' => $this->colors [$currentCard ['type']] ['name'] ));
         // Next player
         $this->gamestate->nextState('playCard');
+
+
+    }
+
+    function playActionOfPlayedCard($player_id) {
+        // TODO switch case according action of the card
+        self::pickCardFromDeck($player_id);
+    }
+
+    function takeCardFromDeck($player_id) {
+       
+    }
+
+    function pickCardFromDeck($player_id) {
+        $this->cards->moveAllCardsInLocation(null, "deck");
+        $this->cards->shuffle('deck');
+        
+        $cards = $this->cards->pickCards(1, 'deck', $player_id);
+        // Notify player about his cards
+        self::notifyPlayer($player_id, 'addNewCards', '', array ('cards' => $cards ));
+        
+        self::setGameStateValue('alreadyPlayedHearts', 0);
     }
 
     
