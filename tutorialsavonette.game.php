@@ -37,24 +37,26 @@ class TutorialSavonette extends Table
                          "alreadyPlayedHearts" => 12,
                           ) );
 
+        // Initialisation de cards pour recupérer la table
         $this->cards = self::getNew( "module.common.deck" );
-        $this->cards->init( "card" ); 
-        
-          // Create cards in the database
-          $cards = array ();
-          foreach ( $this->colors as $color_id => $color ) {
-              // spade, heart, diamond, club
-              for ($value = 2; $value <= 14; $value ++) {
-                  //  2, 3, 4, ... K, A
-                  $cards [] = array ('type' => $color_id,'type_arg' => $value,'nbr' => 1 );
-              }
-          }
-          
-          $this->cards->createCards( $cards, 'deck' );
+        $this->cards->init( "card" );               
 
       
 	}
-	
+	protected function fillDeck( )
+    {
+          // Create cards in the database
+          $cards = array ();
+              // spade, heart, diamond, club
+            foreach ( $this->colors as $color_id => $color ) {
+                // spade, heart, diamond, club
+                for ($value = 2; $value <= 14; $value ++) {
+                    //  2, 3, 4, ... K, A
+                    $cards [] = array ('type' => $color_id,'type_arg' => $value,'nbr' => 1 );
+                }
+            }
+          $this->cards->createCards( $cards, 'deck' );
+    }
     protected function getGameName( )
     {
 		// Used for translations and stuff. Please do not modify.
@@ -70,6 +72,7 @@ class TutorialSavonette extends Table
     */
     protected function setupNewGame( $players, $options = array() )
     {    
+        
         // Set the colors of the players with HTML color code
         // The default below is red/green/blue/orange/brown
         // The number of colors defined here must correspond to the maximum number of players allowed for the gams
@@ -91,7 +94,7 @@ class TutorialSavonette extends Table
         self::reloadPlayersBasicInfos();
         
         /************ Start the game initialization *****/
-
+        self::fillDeck();
         // Shuffle deck
         $this->cards->shuffle('deck');
         // Deal 13 cards to each players
@@ -100,6 +103,7 @@ class TutorialSavonette extends Table
             $cards = $this->cards->pickCards(13, 'deck', $player_id);
         } 
 
+        
         // Activate first player (which is in general a good idea :) )
         $this->activeNextPlayer();
 
@@ -208,8 +212,6 @@ class TutorialSavonette extends Table
     }
 
     function pickCardFromDeck($player_id) {
-        $this->cards->moveAllCardsInLocation(null, "deck");
-        $this->cards->shuffle('deck');
         
         $cards = $this->cards->pickCards(1, 'deck', $player_id);
         // Notify player about his cards
@@ -251,7 +253,7 @@ class TutorialSavonette extends Table
         // Create deck, shuffle it and give 13 initial cards
         $players = self::loadPlayersBasicInfos();
         foreach ( $players as $player_id => $player ) {
-            $cards = $this->cards->pickCards(13, 'deck', $player_id);
+            $cards = $this->cards->pickCards(7, 'deck', $player_id);
             // Notify player about his cards
             self::notifyPlayer($player_id, 'newHand', '', array ('cards' => $cards ));
         }
