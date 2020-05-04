@@ -233,11 +233,23 @@ function (dojo, declare) {
         
       onPlayerHandSelectionChanged : function() {
         var items = this.playerHand.getSelectedItems();
-
+        console.log( 'onPlayerHandSelectionChanged' );
         if (items.length > 0) {
             var action = 'playCard';
-            if (this.checkAction(action, true)) {
+            if (this.checkAction('playActionCard', true)) {
+                console.log( 'onPlayerHandSelectionChanged::playActionCard' );
+                var card_id = items[0].id;                    
+                this.ajaxcall("/" + this.game_name + "/" + this.game_name + "/" + 'playActionCard' + ".html", {
+                    id : card_id,
+                    lock : true
+                }, this, function(result) {
+                }, function(is_error) {
+                });
+
+                this.playerHand.unselectAll();
+            } else if (this.checkAction(action, true)) {
                 // Can play a card
+                console.log( 'onPlayerHandSelectionChanged::playCard' );
                 var card_id = items[0].id;                    
                 this.ajaxcall("/" + this.game_name + "/" + this.game_name + "/" + action + ".html", {
                     id : card_id,
@@ -249,6 +261,7 @@ function (dojo, declare) {
                 this.playerHand.unselectAll();
             } else if (this.checkAction('giveCards')) {
                 // Can give cards => let the player select some cards
+            
             } else {
                 this.playerHand.unselectAll();
             }
@@ -273,6 +286,7 @@ function (dojo, declare) {
 
         dojo.subscribe('newHand', this, "notif_newHand");
         dojo.subscribe('playCard', this, "notif_playCard");
+        dojo.subscribe('playActionCard', this, "notif_playActionCard");
         dojo.subscribe( 'trickWin', this, "notif_trickWin" );
         this.notifqueue.setSynchronous( 'trickWin', 1000 );
         dojo.subscribe( 'giveAllCardsToPlayer', this, "notif_giveAllCardsToPlayer" );
@@ -306,6 +320,11 @@ function (dojo, declare) {
 
     notif_playCard : function(notif) {
         // Play a card on the table
+        this.playCardOnTable(notif.args.player_id, notif.args.color, notif.args.value, notif.args.card_id);
+    },
+    notif_playActionCard : function(notif) {
+        // Play a card on the table
+        console.log( 'notif_playActionCard' );
         this.playCardOnTable(notif.args.player_id, notif.args.color, notif.args.value, notif.args.card_id);
     },
     notif_trickWin : function(notif) {

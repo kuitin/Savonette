@@ -94,6 +94,7 @@ class TutorialSavonette extends Table
         self::reloadPlayersBasicInfos();
         
         /************ Start the game initialization *****/
+        //Fill the deck with 52 cards
         self::fillDeck();
         // Shuffle deck
         $this->cards->shuffle('deck');
@@ -178,7 +179,7 @@ class TutorialSavonette extends Table
     */
 
     function playCard($card_id) {
-        self::checkAction("playCard");
+        //self::checkAction("playCard");
         $player_id = self::getActivePlayerId();
         $this->cards->moveCard($card_id, 'cardsontable', $player_id);
         // XXX check rules here
@@ -202,8 +203,40 @@ class TutorialSavonette extends Table
 
     }
 
+    
+
+    function playActionCard($card_id) {
+       // self::checkAction("playActionCard");
+        $player_id = self::getActivePlayerId();
+        $this->cards->moveCard($card_id, 'cardsontable', $player_id);
+        // XXX check rules here
+        $currentCard = $this->cards->getCard($card_id);
+        $currentTrickColor = self::getGameStateValue( 'trickColor' ) ;
+       if( $currentTrickColor == 0 )
+           self::setGameStateValue( 'trickColor', $currentCard['type'] );
+
+        // Pick card according to the action of the card
+        self::playActionOfPlayedCard($player_id);
+
+        // And notify
+        self::notifyAllPlayers('playActionCard', clienttranslate('${player_name} plays ${value_displayed} ${color_displayed}'), array (
+                'i18n' => array ('color_displayed','value_displayed' ),'card_id' => $card_id,'player_id' => $player_id,
+                'player_name' => self::getActivePlayerName(),'value' => $currentCard ['type_arg'],
+                'value_displayed' => $this->values_label [$currentCard ['type_arg']],'color' => $currentCard ['type'],
+                'color_displayed' => $this->colors [$currentCard ['type']] ['name'] ));
+        // Next player
+        $this->gamestate->nextState('playActionCard');
+
+
+    }
+
+    function acCancelAction() {
+        $this->gamestate->nextState('action');
+    }
+
     function playActionOfPlayedCard($player_id) {
         // TODO switch case according action of the card
+        
         self::pickCardFromDeck($player_id);
     }
 

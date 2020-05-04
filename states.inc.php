@@ -82,14 +82,24 @@ $machinestates = array(
     "type" => "game",
     "action" => "stNewTrick",
     "transitions" => array( "" => 31 )
-),       
+),  
+
 31 => array(
     "name" => "playerTurn",
+    "description" => clienttranslate('${actplayer} must select a card'),
+    "descriptionmyturn" => clienttranslate('${you} must select a card'),
+    "type" => "activeplayer",
+    "possibleactions" => array( "playActionCard" ),
+    "transitions" => array( "playCard" => 32 )
+),
+
+33 => array(
+    "name" => "playActionCard",
     "description" => clienttranslate('${actplayer} must play a card'),
     "descriptionmyturn" => clienttranslate('${you} must play a card'),
     "type" => "activeplayer",
-    "possibleactions" => array( "playCard" ),
-    "transitions" => array( "playCard" => 32 )
+    "possibleactions" => array( "confirmActionMarketSell", "cancelAction" ),
+    "transitions" => array( "playCard" => 32, "playerTurn" => 31   )
 ), 
 32 => array(
     "name" => "nextPlayer",

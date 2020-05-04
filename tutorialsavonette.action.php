@@ -41,14 +41,36 @@
   	
   	// TODO: defines your action entry points there
 
+    public function playActionCard() {
+      self::setAjaxMode();
+      self::trace( "playActionCard" );
+      $card_id = self::getArg("id", AT_posint, true);
+      //$this->game->playCardAction($card_id);    
+      $this->game->playCard($card_id); 
+      self::ajaxResponse();
+  }
 
     public function playCard() {
       self::setAjaxMode();
+      self::trace( "playCard" );
       $card_id = self::getArg("id", AT_posint, true);
       $this->game->playCard($card_id);
       self::ajaxResponse();
   }
 
+  public function confirmactionmarketsell() {
+		self::setAjaxMode();
+		$possibleValues = array("marble", "wood", "fabric", "gold", "spice", "metal");
+		//$resource = self::getArg("resource", AT_enum, true, 'marble', $possibleValues);
+		//$result = $this->game->acConfirmActionMarketSell($resource);
+		self::ajaxResponse();
+	}
+
+  public function cancelAction() {
+		self::setAjaxMode();
+		$result = $this->game->acCancelAction();
+		self::ajaxResponse();
+	}
 
   }
   
